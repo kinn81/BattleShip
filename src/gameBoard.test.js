@@ -66,3 +66,63 @@ test("Gameboard: place ship, attack location, check for hit", () => {
   let result = board.attack(9, 8);
   expect(result).toBe("hit");
 });
+
+test("Gameboard: place ship, attack different location, check not hit", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  let result = board.attack(9, 6);
+  expect(result).toBe("miss");
+});
+
+test("Gameboard: place ship, attack twice, check ship hitcount", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  board.attack(9, 7);
+  board.attack(9, 8);
+  expect(board.board[9][7].ship.hitCount).toBe(2);
+});
+
+test("Gameboard: place ship, retrieve ship and check location matches", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  let ship = board.ships[0];
+  expect(ship.location[0][0]).toBe(9);
+  expect(ship.location[0][1]).toBe(7);
+
+  expect(ship.location[1][0]).toBe(9);
+  expect(ship.location[1][1]).toBe(8);
+
+  expect(ship.location[2][0]).toBe(9);
+  expect(ship.location[2][1]).toBe(9);
+});
+
+test("Gameboard: place ship, attack three times, check ship is sunk", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  let ship = board.ships[0];
+  0;
+  board.attack(9, 7);
+  board.attack(9, 8);
+  expect(ship.isSunk()).toBe(false);
+  board.attack(9, 9);
+  expect(ship.isSunk()).toBe(true);
+});
+
+test("Gameboard: place ships, sink both, check gameOver = true", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(2, [9, 7]);
+  board.placeShipAt(2, [4, 2]);
+  board.attack(9, 7);
+  board.attack(9, 8);
+  board.attack(4, 2);
+  expect(board.gameOver()).toBe(false);
+  board.attack(4, 3);
+  expect(board.gameOver()).toBe(true);
+});
+
+test("Gameboard: check isValidMove() function", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  expect(board.checkValidMove(9, 7)).toBe(false);
+  expect(board.checkValidMove(8, 7)).toBe(true);
+});

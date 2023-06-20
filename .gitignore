@@ -1,2 +1,4 @@
 /node_modules/
-sandbox.js
+/src/sandbox.js
+/dist/
+package-lock.json
