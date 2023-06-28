@@ -11,19 +11,21 @@ let currentPlayerTurn;
 let winner;
 
 initGame();
-startGame();
 
 async function sleep(miliSec) {
   return new Promise((resolve) => setTimeout(() => resolve(), miliSec));
 }
 
 function initGame() {
+  document.getElementById("reset").addEventListener("click", resetGame);
   initPlayers();
   initDOM();
   placeShips();
 }
 
-function placeShips() {}
+function placeShips() {
+  startGame();
+}
 
 function initPlayers() {
   p1 = createPlayer("Keir");
@@ -50,11 +52,11 @@ function initPlayers() {
   winner = null;
 }
 
+//ADDS DIVS-CELLS TO EACH BOARD
 function initDOM() {
   for (let i = 0; i < 100; i++) {
     let div1 = document.createElement("div");
     let div2 = document.createElement("div");
-    div2.addEventListener("click", recordPlayerMove);
     div1.classList.add("cell");
     div2.classList.add("cell");
     div1.dataset.index = i;
@@ -62,17 +64,23 @@ function initDOM() {
     p1Board_DOM.appendChild(div1);
     p2Board_DOM.appendChild(div2);
   }
+  updatePlayerUI(p1Board_DOM, p1);
 }
 
 //ADD EVENT LISTENERS
 function startGame() {
-  document.getElementById("reset").addEventListener("click", resetGame);
+  //ADD EVENT LISTENERS TO P1 BOARD
+  let cells = p2Board_DOM.children;
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].addEventListener("click", recordPlayerMove);
+  }
+
+  //EVENT LISTENER TO HANDLE THE GAMEOVER MODAL
   document.getElementById("overlay").addEventListener("click", function (e) {
     if (document.getElementById("modal").contains(e.target)) {
       resetGame();
     }
   });
-  updatePlayerUI(p1Board_DOM, p1);
 }
 
 function resetGame() {
@@ -108,15 +116,17 @@ function recordPlayerMove(e) {
     if (currentPlayerTurn == p1) {
       let x = Math.floor(e.target.dataset.index / 10);
       let y = e.target.dataset.index % 10;
-      p1.takeTurn(x, y);
-      updatePlayerUI(p2Board_DOM, p2);
-      if (p2Board.gameOver()) {
-        winner = p1;
-        gameOver();
-        return;
+      if (p2Board.checkValidMove(x, y)) {
+        p1.takeTurn(x, y);
+        updatePlayerUI(p2Board_DOM, p2);
+        if (p2Board.gameOver()) {
+          winner = p1;
+          gameOver();
+          return;
+        }
+        currentPlayerTurn = p2;
+        computerMove();
       }
-      currentPlayerTurn = p2;
-      computerMove();
     }
   }
 }

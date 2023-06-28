@@ -36,7 +36,7 @@ let createGameBoard = () => {
     }
   }
   let checkValidMove = (x, y) => {
-    if (x < 9 && y < 9) {
+    if (x < 10 && y < 10) {
       if (!board[x][y].isHit) return true;
     }
     return false;
