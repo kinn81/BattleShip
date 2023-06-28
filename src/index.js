@@ -10,41 +10,30 @@ let p2Board;
 let currentPlayerTurn;
 let winner;
 
+initGame();
 startGame();
 
 async function sleep(miliSec) {
   return new Promise((resolve) => setTimeout(() => resolve(), miliSec));
 }
 
-function startGame() {
+function initGame() {
   initPlayers();
   initDOM();
-  updatePlayerUI(p1Board_DOM, p1);
+  placeShips();
 }
 
-async function computerMove() {
-  if (!winner) {
-    await sleep(100);
-    p2.takeRandomTurn();
-    updatePlayerUI(p1Board_DOM, p1);
-    if (p1Board.gameOver()) {
-      winner = p2;
-      gameOver();
-      return;
-    }
-    currentPlayerTurn = p1;
-  }
-}
+function placeShips() {}
 
 function initPlayers() {
   p1 = createPlayer("Keir");
   p1Board = createGameBoard();
   p1.myBoard = p1Board;
-  //p1Board.placeShipAt(5, [0, 0]);
-  //p1Board.placeShipAt(4, [6, 2]);
-  //p1Board.placeShipAt(3, [4, 3]);
-  //p1Board.placeShipAt(3, [9, 7]);
-  //p1Board.placeShipAt(2, [2, 5]);
+  p1Board.placeShipAt(5, [0, 0]);
+  p1Board.placeShipAt(4, [6, 2]);
+  p1Board.placeShipAt(3, [4, 3]);
+  p1Board.placeShipAt(3, [9, 7]);
+  p1Board.placeShipAt(2, [2, 5]);
 
   p2 = createPlayer("John");
   p2Board = createGameBoard();
@@ -59,6 +48,39 @@ function initPlayers() {
   p2.theirBoard = p1Board;
   currentPlayerTurn = p1;
   winner = null;
+}
+
+function initDOM() {
+  for (let i = 0; i < 100; i++) {
+    let div1 = document.createElement("div");
+    let div2 = document.createElement("div");
+    div2.addEventListener("click", recordPlayerMove);
+    div1.classList.add("cell");
+    div2.classList.add("cell");
+    div1.dataset.index = i;
+    div2.dataset.index = i;
+    p1Board_DOM.appendChild(div1);
+    p2Board_DOM.appendChild(div2);
+  }
+}
+
+//ADD EVENT LISTENERS
+function startGame() {
+  document.getElementById("reset").addEventListener("click", resetGame);
+  document.getElementById("overlay").addEventListener("click", function (e) {
+    if (document.getElementById("modal").contains(e.target)) {
+      resetGame();
+    }
+  });
+  updatePlayerUI(p1Board_DOM, p1);
+}
+
+function resetGame() {
+  p1Board_DOM.replaceChildren();
+  p2Board_DOM.replaceChildren();
+  document.getElementById("container").classList.remove("blur");
+  document.getElementById("overlay").style.display = "none";
+  initGame();
 }
 
 function updatePlayerUI(board_DOM, player) {
@@ -78,36 +100,6 @@ function updatePlayerUI(board_DOM, player) {
       }
     }
   }
-}
-
-function initDOM() {
-  for (let i = 0; i < 100; i++) {
-    let div1 = document.createElement("div");
-    let div2 = document.createElement("div");
-    div2.addEventListener("click", recordPlayerMove);
-    div1.classList.add("cell");
-    div2.classList.add("cell");
-    div1.dataset.index = i;
-    div2.dataset.index = i;
-    p1Board_DOM.appendChild(div1);
-    p2Board_DOM.appendChild(div2);
-    document.getElementById("reset").addEventListener("click", resetGame);
-    document.getElementById("reset").addEventListener("click", resetGame);
-  }
-  document.getElementById("overlay").addEventListener("click", function (e) {
-    console.log(e);
-    if (document.getElementById("modal").contains(e.target)) {
-      resetGame();
-    }
-  });
-}
-
-function resetGame() {
-  p1Board_DOM.replaceChildren();
-  p2Board_DOM.replaceChildren();
-  document.getElementById("container").classList.remove("blur");
-  document.getElementById("overlay").style.display = "none";
-  startGame();
 }
 
 function recordPlayerMove(e) {
@@ -132,4 +124,18 @@ function gameOver() {
   document.getElementById("container").className += "blur";
   document.getElementById("overlay").style.display = "flex";
   document.getElementById("modal").textContent = `${winner.name} Wins!`;
+}
+
+async function computerMove() {
+  if (!winner) {
+    await sleep(100);
+    p2.takeRandomTurn();
+    updatePlayerUI(p1Board_DOM, p1);
+    if (p1Board.gameOver()) {
+      winner = p2;
+      gameOver();
+      return;
+    }
+    currentPlayerTurn = p1;
+  }
 }
