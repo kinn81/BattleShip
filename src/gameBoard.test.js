@@ -74,6 +74,13 @@ test("Gameboard: place ship, attack different location, check not hit", () => {
   expect(result).toBe("miss");
 });
 
+test("Gameboard: attack location, check cell is hit", () => {
+  let board = createGameBoard("ki");
+  board.placeShipAt(3, [9, 7]);
+  board.attack(9, 6);
+  expect(board.board[9][6].isHit).toBe(true);
+});
+
 test("Gameboard: place ship, attack twice, check ship hitcount", () => {
   let board = createGameBoard("ki");
   board.placeShipAt(3, [9, 7]);

@@ -12,6 +12,7 @@
   },
   "scripts": {
     "jest": "jest --watch ./src/*.js",
-    "build": "webpack"
+    "build": "webpack",
+    "watch": "webpack --watch"
   }
 }

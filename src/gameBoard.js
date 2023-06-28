@@ -58,7 +58,10 @@ let createGameBoard = () => {
     let ship = board[x][y].ship;
     if (ship != undefined) {
       if (!ship.isSunk()) {
-        if (ship.hit()) return "hit";
+        if (ship.hit()) {
+          board[x][y].isHit = true;
+          return "hit";
+        }
       }
     } else {
       board[x][y].isHit = true;

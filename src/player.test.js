@@ -62,3 +62,13 @@ test("Player: take 100 random moves, check every cell is hit", () => {
   }
   expect(result).toBe(true);
 });
+
+test("Player: get myBoard and theirBoard", () => {
+  let p1 = createPlayer("Jane");
+  let p1Board = createGameBoard();
+  let p2Board = createGameBoard();
+  p1.theirBoard = p2Board;
+  p1.myBoard = p1Board;
+  expect(p1.theirBoard).toBe(p2Board);
+  expect(p1.myBoard).toBe(p1Board);
+});

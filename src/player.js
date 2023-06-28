@@ -1,4 +1,5 @@
 let createPlayer = (name) => {
+  let myBoard;
   let theirBoard;
   return {
     get name() {
@@ -6,6 +7,15 @@ let createPlayer = (name) => {
     },
     set theirBoard(board) {
       theirBoard = board;
+    },
+    set myBoard(board) {
+      myBoard = board;
+    },
+    get myBoard() {
+      return myBoard;
+    },
+    get theirBoard() {
+      return theirBoard;
     },
 
     takeTurn(x, y) {
