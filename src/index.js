@@ -81,6 +81,7 @@ function resetGame() {
   document.getElementById("container").classList.remove("blur");
   document.getElementById("overlay").style.display = "none";
   initGame();
+  startGame();
 }
 
 function updatePlayerUI(board_DOM, player) {
